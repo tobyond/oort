@@ -6,9 +6,10 @@ Gem::Specification.new do |spec|
   spec.name = "oort"
   spec.version = Oort::VERSION
   spec.authors = ["tobyond"]
+  spec.homepage = "https://github.com/tobyond/oort"
 
   spec.summary = "Oort to sort, order"
-  spec.description = "Oort to sort, order"
+  spec.description = "Rails sorting and ordering without deadlocks"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 
