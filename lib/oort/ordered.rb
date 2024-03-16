@@ -14,20 +14,23 @@ module Oort
     end
 
     module ClassMethods
-      def handles_ordering_of(association)
+      def handles_ordering_of(association, default: :top)
         args = {
           stored_in: :"#{association}_ordering",
           insert_method_name: :"update_#{association}_ordering",
           remove_from_method_name: :"remove_from_#{association}_ordering",
           association_class: association.to_s.classify.constantize,
           instance_name: :"#{name.downcase}",
-          class_name: name.classify.constantize
+          class_name: name.classify.constantize,
+          default:
         }
 
         Inserts.call(**args.slice(:stored_in, :insert_method_name, :class_name))
         Removes.call(**args.slice(:stored_in, :remove_from_method_name, :class_name))
         Scopes.call(**args.slice(:association_class))
-        Callbacks.call(**args.slice(:association_class, :remove_from_method_name, :insert_method_name, :instance_name))
+        Callbacks.call(
+          **args.slice(:association_class, :remove_from_method_name, :insert_method_name, :instance_name, :default)
+        )
       end
     end
   end

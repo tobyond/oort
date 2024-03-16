@@ -17,7 +17,7 @@ Let's begin with a basic schema involving a User and a Post. You can substitute 
 
 Firstly, you will also need the following migration to users (postgresql only for now):
 
-```
+```RUBY
   def change
     add_column(:users, :posts_ordering, :integer, array: true, default: [], using: 'ARRAY[benefit_type]::INTEGER[]')
 
@@ -31,7 +31,7 @@ This will store the ids of posts in an array on the user, and will only accept i
 
 Include the `Oort::Ordered` module in the parent object:
 
-```
+```RUBY
 class User < ActiveRecord::Base
   include Oort::Ordered
   handles_ordering_of :posts
@@ -52,7 +52,7 @@ This inclusion adds `update_posts_ordering` to the user model and `insert_at` to
 
 The following callbacks are also added to post:
 
-```
+```RUBY
 after_create_commit :insert_at
 after_destroy :remove_from_reorderable
 ```
@@ -66,12 +66,27 @@ To remove a post, simply call `post.remove_from_reorderable`
 ### Scope
 The `ordered_with` scope is also added to the post model. This allows a `user` object to have the following query:
 
-```
+```RUBY
 user.posts.ordered_with(user.posts_ordering)
 
 # or
 
 Post.where(user_id: user.id).ordered_with(user.posts_ordering)
+```
+
+### Customization
+
+`handles_ordering_of` can allow for new records to be the top of the order or the bottom of the order. By default it will push any new records to the top of the order, but you can specify the bottom of the order like so:
+
+```ruby
+
+class User < ActiveRecord::Base
+  include Oort::Ordered
+  handles_ordering_of :posts, default: :bottom
+
+  has_many :posts
+end
+
 ```
 
 

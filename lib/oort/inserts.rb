@@ -26,13 +26,22 @@ module Oort
         #   end
         # end
         <<-RUBY, __FILE__, __LINE__ + 1
-          def #{insert_method_name}(insert:, at: 0)
+          def #{insert_method_name}(insert:, at: 0, initial: nil)
             with_lock do
               current_values = public_send(#{stored_in.inspect})
-              current_index = current_values.find_index(insert)
-              insertable = current_index.blank? ? insert : current_values.delete_at(current_index)
-              current_values.insert(at, insertable)
-              update(#{stored_in.inspect} => current_values)
+
+              if initial == :top
+                current_values.unshift(insert)
+                save
+              elsif initial == :bottom
+                current_values << insert
+                save
+              else
+                current_index = current_values.find_index(insert)
+                insertable = current_index.blank? ? insert : current_values.delete_at(current_index)
+                current_values.insert(at, insertable)
+                update(#{stored_in.inspect} => current_values)
+              end
             end
           end
         RUBY
