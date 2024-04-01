@@ -7,10 +7,6 @@ module Oort
   module Ordered
     def self.included(base)
       base.extend ClassMethods
-      # base.include InstanceMethods
-
-      base.class_eval do
-      end
     end
 
     module ClassMethods
@@ -27,7 +23,6 @@ module Oort
 
         Inserts.call(**args.slice(:stored_in, :insert_method_name, :class_name))
         Removes.call(**args.slice(:stored_in, :remove_from_method_name, :class_name))
-        Scopes.call(**args.slice(:association_class))
         Callbacks.call(
           **args.slice(:association_class, :remove_from_method_name, :insert_method_name, :instance_name, :default)
         )

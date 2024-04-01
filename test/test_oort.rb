@@ -3,6 +3,7 @@
 require "test_helper"
 
 class Post < ActiveRecord::Base
+  include Oort::Scopes
   belongs_to :user
 end
 

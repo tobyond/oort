@@ -63,8 +63,18 @@ These callbacks automatically insert a new post at the first position and remove
 To change to order of a post, simply call `post.insert_at(12)`
 To remove a post, simply call `post.remove_from_reorderable`
 
-### Scope
-The `ordered_with` scope is also added to the post model. This allows a `user` object to have the following query:
+### Scopes
+You can add the `ordered_with` scope.
+
+```RUBY
+class Post < ActiveRecord::Base
+  include Oort::Scopes
+
+  belongs_to :user
+end
+```
+
+This allows a `user` object to have the following query:
 
 ```RUBY
 user.posts.ordered_with(user.posts_ordering)
