@@ -32,7 +32,7 @@ module Oort
     def add_callbacks
       association_class.class_eval do
         after_create_commit :initial_insert_at
-        after_destroy :remove_from_reorderable
+        before_destroy :remove_from_reorderable
       end
     end
 
